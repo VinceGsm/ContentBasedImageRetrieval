@@ -30,15 +30,22 @@ public class MainCBIR {
 		Image velo = ImageLoader.exec("C:\\Users\\Vincent\\eclipse-workspace\\M4105C\\ImageTP\\velo.jpg");
 		Image eiffel = ImageLoader.exec("C:\\Users\\Vincent\\eclipse-workspace\\M4105C\\ImageTP\\eiffel.jpg");
 		Image maldive = ImageLoader.exec("C:\\Users\\Vincent\\eclipse-workspace\\M4105C\\ImageTP\\maldive.jpg");
+		Image moto0 = ImageLoader.exec("C:\\Users\\Vincent\\eclipse-workspace\\M4105C\\ImageTP\\Projet\\motos\\000.jpg");
+		//
 		
 		int xEiffel = eiffel.getXDim();
 		int yEiffel = eiffel.getYDim();
 		
 		//eiffel = debruiterMedian(eiffel, false);
 		double[][] histoEiffel = histogrammeImageRGB(eiffel, false);
+		double[][] histoMoto0 = histogrammeImageRGB(moto0, false);
+		
+		
+		histoMoto0 = discretisation(histoMoto0);
+		histoMoto0 = normalisation(histoMoto0, (moto0.getXDim()* moto0.getYDim()) );
 		
 		//normalisation(histoEiffel, (xEiffel * yEiffel) );
-		discretisation(histoEiffel);
+		//discretisation(histoEiffel);
 		//normalizeHistogram(histoEiffel);
 		//int nbPixelEiffel = eiffel.getXDim() * eiffel.getYDim();
 		//normalisation(histogrammeImageRGB(eiffel,false), nbPixelEiffel );
@@ -196,13 +203,13 @@ public class MainCBIR {
 	
 	public static double[][] normalisation(double[][] histogram, int nbPixel) {
 		
-		for(int i=0; i<255; i++ ) {
+		for(int i=0; i<histogram.length; i++ ) {
 			histogram[i][0] = histogram[i][0] / nbPixel ;
 			histogram[i][1] = histogram[i][1] / nbPixel ;
 			histogram[i][2] = histogram[i][2] / nbPixel ;
 		}
-	
-		displayHistoRGB(histogram);
+
+		//displayHistoRGB(histogram);
 		return histogram;
 	}
 
@@ -210,7 +217,6 @@ public class MainCBIR {
 		public static double[][] discretisation(double[][] histogram) {
 			
 			double[][] histogramme = new double[10][3];
-			
 			
 			int compteur = 0;
 			
@@ -220,8 +226,6 @@ public class MainCBIR {
 				double moyenneTrancheG = 0;
 				double moyenneTrancheB = 0;
 				
-				
-				
 				for(int x= 0; x<compteur+25; x++ ) {
 					moyenneTrancheR += histogram[i][0];
 					moyenneTrancheG += histogram[i][1];
@@ -229,20 +233,16 @@ public class MainCBIR {
 					
 				}
 				compteur = compteur+25;
-				
-					//OK
-					moyenneTrancheR = moyenneTrancheR /25;
-					moyenneTrancheG = moyenneTrancheG /25;
-					moyenneTrancheB = moyenneTrancheB /25;
-					
-					histogramme[i][0] = moyenneTrancheR;
-					histogramme[i][1] = moyenneTrancheG;
-					histogramme[i][2] = moyenneTrancheB;
-					//OK
 
+				moyenneTrancheR = moyenneTrancheR /25;
+				moyenneTrancheG = moyenneTrancheG /25;
+				moyenneTrancheB = moyenneTrancheB /25;
 				
+				histogramme[i][0] = moyenneTrancheR;
+				histogramme[i][1] = moyenneTrancheG;
+				histogramme[i][2] = moyenneTrancheB;
 			}
-			displayHistoRGB(histogramme);
+			//displayHistoRGB(histogramme);
 			return histogramme;
 		}
 	
@@ -262,9 +262,9 @@ public class MainCBIR {
 	}
 	
 	
-	public static void rechercheImageSim(Image image, Boolean affichage) {
+	public static void rechercheImageSimMoto(Image image, Boolean affichage) {
 		
-		TreeMap<String,Double> listImgSim = new TreeMap<>();
+		TreeMap<String,Double> listImgSimil = new TreeMap<>();
 		
 		//A
 		List<Image> listImgMotos = getAllImage("C:\\Users\\Vincent\\eclipse-workspace\\M4105C\\ImageTp\\Projet\\motos");
@@ -285,22 +285,20 @@ public class MainCBIR {
 		
 		//B
 		for(double[][] unHisto : listHistogram) {
+			int cpt = 0;
 			Double similitudeR = (double) 0;
 			Double similitudeG = (double) 0;
 			Double similitudeB = (double) 0;
 			
-			
-			
+			//
 			
 			Double similitudeValue = similitudeR + similitudeG + similitudeB;
 			
-			//C
-			for(int i = 0; i< listImgMotos.size(); i++) {
-				
-				String name = "00"+ i;
-				listImgSim.put(name,similitudeValue);
-			}
+			//C				
+			String name = "0"+ cpt;
+			listImgSimil.put(name,similitudeValue);
 			// --- //
+			cpt++;
 		}
 		// --- //
 		
@@ -376,6 +374,44 @@ public class MainCBIR {
 	}
 	
 	
+	public static void displayHistoRGB3en1(double[][] histogram) {
+		
+		///////////////// FUNCTION PROF ////////////////////////////
+		XYSeries myseries = new XYSeries("Nombre de pixels");  
+	
+		for(int i=0;i<histogram.length;i++){
+			myseries.add(new Double(i), new Double(histogram[i][0]));   
+		}
+		for(int i=0;i<histogram.length;i++){
+			myseries.add(new Double(i), new Double(histogram[i][1]));   
+		}
+		for(int i=0;i<histogram.length;i++){
+			myseries.add(new Double(i), new Double(histogram[i][2]));   
+		}
+		
+		XYSeriesCollection myseriescollection = new XYSeriesCollection(myseries);   
+		
+	    JFreeChart jfreechart = ChartFactory.createXYBarChart("Histogramme de l'image", "RGB", false, "Nombre de pixels", myseriescollection, PlotOrientation.VERTICAL, true, false, false);   
+		jfreechart.setBackgroundPaint(Color.white);   
+		XYPlot xyplot = jfreechart.getXYPlot();   
+	
+		xyplot.setBackgroundPaint(Color.lightGray);   
+		xyplot.setRangeGridlinePaint(Color.white);   
+		NumberAxis axis = (NumberAxis) xyplot.getDomainAxis();   
+		
+		axis.setLowerMargin(0);   
+		axis.setUpperMargin(0);   
+	
+		// create and display a frame...
+		ChartFrame frame = new ChartFrame("LP IOT - Image", jfreechart);
+		frame.pack();
+		frame.setVisible(true);
+		///////////////// ---------- ////////////////////////////
+		
+	}
+	
+	
+	//Google
 	private static void normalizeHistogram(double[][] histogram) {
 	        
 	    int numBins = histogram.length;
@@ -402,41 +438,7 @@ public class MainCBIR {
 	    }
 	    displayHistoRGB(histogram);
 	}
+	
+	
+	
 }
-
-
-
-
-			/* affichage histoRGB 3 en 1
-			 ///////////////// FUNCTION PROF ////////////////////////////
-			XYSeries myseries = new XYSeries("Nombre de pixels");  
-
-			for(int i=0;i<histogramRGB.length;i++){
-				myseries.add(new Double(i), new Double(histogramRGB[i][0]));   
-			}
-			for(int i=0;i<histogramRGB.length;i++){
-				myseries.add(new Double(i), new Double(histogramRGB[i][1]));   
-			}
-			for(int i=0;i<histogramRGB.length;i++){
-				myseries.add(new Double(i), new Double(histogramRGB[i][2]));   
-			}
-			
-			XYSeriesCollection myseriescollection = new XYSeriesCollection(myseries);   
-			
-	        JFreeChart jfreechart = ChartFactory.createXYBarChart("Histogramme de l'image", "RGB", false, "Nombre de pixels", myseriescollection, PlotOrientation.VERTICAL, true, false, false);   
-			jfreechart.setBackgroundPaint(Color.white);   
-			XYPlot xyplot = jfreechart.getXYPlot();   
-		
-			xyplot.setBackgroundPaint(Color.lightGray);   
-			xyplot.setRangeGridlinePaint(Color.white);   
-			NumberAxis axis = (NumberAxis) xyplot.getDomainAxis();   
-			
-			axis.setLowerMargin(0);   
-			axis.setUpperMargin(0);   
-
-			// create and display a frame...
-			ChartFrame frame = new ChartFrame("LP IOT - Image", jfreechart);
-			frame.pack();
-			frame.setVisible(true);
-			///////////////// ---------- ////////////////////////////
- */
