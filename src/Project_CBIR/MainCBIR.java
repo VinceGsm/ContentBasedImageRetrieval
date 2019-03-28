@@ -35,7 +35,7 @@ public class MainCBIR {
 		int yEiffel = eiffel.getYDim();
 		
 		//eiffel = debruiterMedian(eiffel, false);
-		int[][] histoEiffel = histogrammeImageRGB(eiffel, false);
+		double[][] histoEiffel = histogrammeImageRGB(eiffel, false);
 		
 		//normalisation(histoEiffel, (xEiffel * yEiffel) );
 		discretisation(histoEiffel);
@@ -115,54 +115,52 @@ public class MainCBIR {
 		int largeur = image.getXDim();
 		int hauteur = image.getYDim();
 		
-		int[] intArrayR = new int[9];
-		int[] intArrayG = new int[9];
-		int[] intArrayB = new int[9];
+		double[] doubleArrayR = new double[9];
+		double[] doubleArrayG = new double[9];
+		double[] doubleArrayB = new double[9];
 		
 		for(int x=1; x<largeur-2 ; x++){
 			for(int y=1; y<hauteur-2 ; y++) {
 	
-				intArrayR[0] = image.getPixelXYBByte(x, y, 0);
-				intArrayR[1] = image.getPixelXYBByte(x-1, y-1, 0);
-				intArrayR[2] = image.getPixelXYBByte(x, y-1, 0);
-				intArrayR[3] = image.getPixelXYBByte(x+1, y-1, 0);
-				intArrayR[4] = image.getPixelXYBByte(x-1, y, 0);
-				intArrayR[5] = image.getPixelXYBByte(x+1, y, 0);
-				intArrayR[6] = image.getPixelXYBByte(x-1, y+1, 0);
-				intArrayR[7] = image.getPixelXYBByte(x, y+1, 0);
-				intArrayR[8] = image.getPixelXYBByte(x+1, y+1, 0);
+				doubleArrayR[0] = image.getPixelXYBByte(x, y, 0);
+				doubleArrayR[1] = image.getPixelXYBByte(x-1, y-1, 0);
+				doubleArrayR[2] = image.getPixelXYBByte(x, y-1, 0);
+				doubleArrayR[3] = image.getPixelXYBByte(x+1, y-1, 0);
+				doubleArrayR[4] = image.getPixelXYBByte(x-1, y, 0);
+				doubleArrayR[5] = image.getPixelXYBByte(x+1, y, 0);
+				doubleArrayR[6] = image.getPixelXYBByte(x-1, y+1, 0);
+				doubleArrayR[7] = image.getPixelXYBByte(x, y+1, 0);
+				doubleArrayR[8] = image.getPixelXYBByte(x+1, y+1, 0);
 				
-				intArrayG[0] = image.getPixelXYBByte(x, y, 1);
-				intArrayG[1] = image.getPixelXYBByte(x-1, y-1, 1);
-				intArrayG[2] = image.getPixelXYBByte(x, y-1, 1);
-				intArrayG[3] = image.getPixelXYBByte(x+1, y-1, 1);
-				intArrayG[4] = image.getPixelXYBByte(x-1, y, 1);
-				intArrayG[5] = image.getPixelXYBByte(x+1, y, 1);
-				intArrayG[6] = image.getPixelXYBByte(x-1, y+1, 1);
-				intArrayG[7] = image.getPixelXYBByte(x, y+1, 1);
-				intArrayG[8] = image.getPixelXYBByte(x+1, y+1, 1);
+				doubleArrayG[0] = image.getPixelXYBByte(x, y, 1);
+				doubleArrayG[1] = image.getPixelXYBByte(x-1, y-1, 1);
+				doubleArrayG[2] = image.getPixelXYBByte(x, y-1, 1);
+				doubleArrayG[3] = image.getPixelXYBByte(x+1, y-1, 1);
+				doubleArrayG[4] = image.getPixelXYBByte(x-1, y, 1);
+				doubleArrayG[5] = image.getPixelXYBByte(x+1, y, 1);
+				doubleArrayG[6] = image.getPixelXYBByte(x-1, y+1, 1);
+				doubleArrayG[7] = image.getPixelXYBByte(x, y+1, 1);
+				doubleArrayG[8] = image.getPixelXYBByte(x+1, y+1, 1);
 				
-				intArrayB[0] = image.getPixelXYBByte(x, y, 2);
-				intArrayB[1] = image.getPixelXYBByte(x-1, y-1, 2);
-				intArrayB[2] = image.getPixelXYBByte(x, y-1, 2);
-				intArrayB[3] = image.getPixelXYBByte(x+1, y-1, 2);
-				intArrayB[4] = image.getPixelXYBByte(x-1, y, 2);
-				intArrayB[5] = image.getPixelXYBByte(x+1, y, 2);
-				intArrayB[6] = image.getPixelXYBByte(x-1, y+1, 2);
-				intArrayB[7] = image.getPixelXYBByte(x, y+1, 2);
-				intArrayB[8] = image.getPixelXYBByte(x+1, y+1, 2);
+				doubleArrayB[0] = image.getPixelXYBByte(x, y, 2);
+				doubleArrayB[1] = image.getPixelXYBByte(x-1, y-1, 2);
+				doubleArrayB[2] = image.getPixelXYBByte(x, y-1, 2);
+				doubleArrayB[3] = image.getPixelXYBByte(x+1, y-1, 2);
+				doubleArrayB[4] = image.getPixelXYBByte(x-1, y, 2);
+				doubleArrayB[5] = image.getPixelXYBByte(x+1, y, 2);
+				doubleArrayB[6] = image.getPixelXYBByte(x-1, y+1, 2);
+				doubleArrayB[7] = image.getPixelXYBByte(x, y+1, 2);
+				doubleArrayB[8] = image.getPixelXYBByte(x+1, y+1, 2);
 				
-				Arrays.parallelSort(intArrayR);
-				Arrays.parallelSort(intArrayG);
-				Arrays.parallelSort(intArrayB);
+				Arrays.parallelSort(doubleArrayR);
+				Arrays.parallelSort(doubleArrayG);
+				Arrays.parallelSort(doubleArrayB);
 				
-				resultNoise.setPixelXYBByte(x, y, 0, intArrayR[4]);
-				resultNoise.setPixelXYBByte(x, y, 1, intArrayG[4]);
-				resultNoise.setPixelXYBByte(x, y, 2, intArrayB[4]);
+				resultNoise.setPixelXYBByte(x, y, 0, (int) doubleArrayR[4]);
+				resultNoise.setPixelXYBByte(x, y, 1, (int) doubleArrayG[4]);
+				resultNoise.setPixelXYBByte(x, y, 2, (int) doubleArrayB[4]);
 			}	
 		}
-		
-		
 		
 		
 		if(affichage) { Viewer2D.exec(resultNoise); }	
@@ -171,22 +169,22 @@ public class MainCBIR {
 	}
 
 	
-	public static int[][] histogrammeImageRGB(Image image, Boolean affichage) {
+	public static double[][] histogrammeImageRGB(Image image, Boolean affichage) {
 		
-		int[][] histogramRGB = new int[256][3];
-		int largeur = image.getXDim();
-		int hauteur = image.getYDim();
+		double[][] histogramRGB = new double[256][3];
+		double largeur = image.getXDim();
+		double hauteur = image.getYDim();
 		
 		for(int x=0; x<largeur ; x++){
 			for(int y=0; y<hauteur ;y++) {
 				
-				int niveauR = image.getPixelXYBByte(x, y, 0);
-				int niveauG = image.getPixelXYBByte(x, y, 1);
-				int niveauB = image.getPixelXYBByte(x, y, 2);
+				double niveauR = image.getPixelXYBByte(x, y, 0);
+				double niveauG = image.getPixelXYBByte(x, y, 1);
+				double niveauB = image.getPixelXYBByte(x, y, 2);
 				
-				histogramRGB[niveauR][0]++;
-				histogramRGB[niveauG][1]++;
-				histogramRGB[niveauB][2]++;
+				histogramRGB[(int) niveauR][0]++;
+				histogramRGB[(int) niveauG][1]++;
+				histogramRGB[(int) niveauB][2]++;
 			}	
 		}
 		
@@ -196,7 +194,7 @@ public class MainCBIR {
 	}
 	
 	
-	public static int[][] normalisation(int[][] histogram, int nbPixel) {
+	public static double[][] normalisation(double[][] histogram, int nbPixel) {
 		
 		for(int i=0; i<255; i++ ) {
 			histogram[i][0] = histogram[i][0] / nbPixel ;
@@ -207,39 +205,46 @@ public class MainCBIR {
 		displayHistoRGB(histogram);
 		return histogram;
 	}
-	
+
 	//prendre tranche de 25 (/10), faire la moyenne --> histo de 10
-	public static int[][] discretisation(int[][] histogram) {
-		
-		int[][] histogramme = new int[10][3];
-		int cpt =0;
-		
-		for(int i=0; i<9; i++ ) {
+		public static double[][] discretisation(double[][] histogram) {
 			
-			int moyenneTrancheR = 0;
-			int moyenneTrancheG = 0;
-			int moyenneTrancheB = 0;
+			double[][] histogramme = new double[10][3];
 			
-			for(int x= cpt; x<24; x++ ) {
-				moyenneTrancheR += histogram[x][0];
-				moyenneTrancheG += histogram[x][1];
-				moyenneTrancheB += histogram[x][2];
+			
+			int compteur = 0;
+			
+			for(int i=0; i<10; i++ ) {
+				
+				double moyenneTrancheR = 0;
+				double moyenneTrancheG = 0;
+				double moyenneTrancheB = 0;
+				
+				
+				
+				for(int x= 0; x<compteur+25; x++ ) {
+					moyenneTrancheR += histogram[i][0];
+					moyenneTrancheG += histogram[i][1];
+					moyenneTrancheB += histogram[i][2];
+					
+				}
+				compteur = compteur+25;
+				
+					//OK
+					moyenneTrancheR = moyenneTrancheR /25;
+					moyenneTrancheG = moyenneTrancheG /25;
+					moyenneTrancheB = moyenneTrancheB /25;
+					
+					histogramme[i][0] = moyenneTrancheR;
+					histogramme[i][1] = moyenneTrancheG;
+					histogramme[i][2] = moyenneTrancheB;
+					//OK
+
+				
 			}
-			
-			moyenneTrancheR = moyenneTrancheR /25;
-			moyenneTrancheG = moyenneTrancheG /25;
-			moyenneTrancheB = moyenneTrancheB /25;
-			
-			histogramme[i][0] = moyenneTrancheR;
-			histogramme[i][1] = moyenneTrancheG;
-			histogramme[i][2] = moyenneTrancheB;
-			
-			cpt += 25;
+			displayHistoRGB(histogramme);
+			return histogramme;
 		}
-		displayHistoRGB(histogramme);
-		return histogramme;
-	}
-	
 	
 	public static List<Image> getAllImage(String pathToFolder) {
 		
@@ -263,13 +268,13 @@ public class MainCBIR {
 		
 		//A
 		List<Image> listImgMotos = getAllImage("C:\\Users\\Vincent\\eclipse-workspace\\M4105C\\ImageTp\\Projet\\motos");
-		List<int[][]> listHistogram = new ArrayList();
+		List<double[][]> listHistogram = new ArrayList();
 		
 		for(Image uneImg : listImgMotos) { 
 			int nbPixel = uneImg.getXDim() * uneImg.getYDim();
 			
 			uneImg = debruiterMedian(uneImg, false); 
-			int[][] histo = histogrammeImageRGB(uneImg, false);
+			double[][] histo = histogrammeImageRGB(uneImg, false);
 			
 			histo = discretisation(histo);
 			histo = normalisation(histo, nbPixel);
@@ -279,7 +284,7 @@ public class MainCBIR {
 		// --- //
 		
 		//B
-		for(int[][] unHisto : listHistogram) {
+		for(double[][] unHisto : listHistogram) {
 			Double similitudeR = (double) 0;
 			Double similitudeG = (double) 0;
 			Double similitudeB = (double) 0;
@@ -304,7 +309,7 @@ public class MainCBIR {
 	}
 	
 	
-	public static void displayHistoRGB(int[][] histogram) {
+	public static void displayHistoRGB(double[][] histogram) {
 				
 		///////////////// FUNCTION PROF ////////////////////////////
 		XYSeries myseriesR = new XYSeries("Nombre de pixels");
@@ -371,7 +376,7 @@ public class MainCBIR {
 	}
 	
 	
-	private static void normalizeHistogram(int[][] histogram) {
+	private static void normalizeHistogram(double[][] histogram) {
 	        
 	    int numBins = histogram.length;
 	    int numChannels = histogram[0].length;
@@ -402,8 +407,8 @@ public class MainCBIR {
 
 
 
-/* affichage histoRGB 3 en 1
- ///////////////// FUNCTION PROF ////////////////////////////
+			/* affichage histoRGB 3 en 1
+			 ///////////////// FUNCTION PROF ////////////////////////////
 			XYSeries myseries = new XYSeries("Nombre de pixels");  
 
 			for(int i=0;i<histogramRGB.length;i++){
