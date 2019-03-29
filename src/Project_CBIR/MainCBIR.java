@@ -4,7 +4,10 @@ import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.jfree.chart.ChartFactory;
@@ -24,8 +27,8 @@ import fr.unistra.pelican.algorithms.visualisation.Viewer2D;
 public class MainCBIR {
 
 	public static void main(String[] args) {
-		String pathBroad = "C:\\Users\\Vincent\\eclipse-workspace\\M4105C\\ImageTp\\Projet\\broad";
-		String pathMotos = "C:\\Users\\Vincent\\eclipse-workspace\\M4105C\\ImageTp\\Projet\\motos";
+		String pathBroad = "C:\\Users\\Vincent\\eclipse-workspace\\M4105C\\ImageTp\\Projet\\broad\\";
+		String pathMotos = "C:\\Users\\Vincent\\eclipse-workspace\\M4105C\\ImageTp\\Projet\\motos\\";
 		//ImageSave.exec(xxxxx,"C:\\Users\\Vincent\\eclipse-workspace\\M4105C\\imageTp\\xxxxx.jpg");
 		Image velo = ImageLoader.exec("C:\\Users\\Vincent\\eclipse-workspace\\M4105C\\ImageTP\\velo.jpg");
 		Image eiffel = ImageLoader.exec("C:\\Users\\Vincent\\eclipse-workspace\\M4105C\\ImageTP\\eiffel.jpg");
@@ -49,7 +52,6 @@ public class MainCBIR {
 		//normalizeHistogram(histoEiffel);
 		//int nbPixelEiffel = eiffel.getXDim() * eiffel.getYDim();
 		//normalisation(histogrammeImageRGB(eiffel,false), nbPixelEiffel );
-		
 	}
 	
 	
@@ -209,12 +211,12 @@ public class MainCBIR {
 			histogram[i][2] = histogram[i][2] / nbPixel ;
 		}
 
-		//displayHistoRGB(histogram);
+		displayHistoRGB(histogram);
 		return histogram;
 	}
 
 	//prendre tranche de 25 (/10), faire la moyenne --> histo de 10
-		public static double[][] discretisation(double[][] histogram) {
+	public static double[][] discretisation(double[][] histogram) {
 			
 			double[][] histogramme = new double[10][3];
 			
@@ -264,7 +266,10 @@ public class MainCBIR {
 	
 	public static void rechercheImageSimMoto(Image image, Boolean affichage) {
 		
+		String pathMotos = "C:\\Users\\Vincent\\eclipse-workspace\\M4105C\\ImageTp\\Projet\\motos\\";
 		TreeMap<String,Double> listImgSimil = new TreeMap<>();
+		
+		double[][] histoRecu = histogrammeImageRGB(image, false);
 		
 		//A
 		List<Image> listImgMotos = getAllImage("C:\\Users\\Vincent\\eclipse-workspace\\M4105C\\ImageTp\\Projet\\motos");
@@ -285,25 +290,51 @@ public class MainCBIR {
 		
 		//B
 		for(double[][] unHisto : listHistogram) {
+
 			int cpt = 0;
 			Double similitudeR = (double) 0;
 			Double similitudeG = (double) 0;
 			Double similitudeB = (double) 0;
 			
-			//
+			for(int x =0; x<=9; x++) {
+				similitudeR += Math.abs(histoRecu[x][0]) - Math.abs(unHisto[x][0]);
+				similitudeG += Math.abs(histoRecu[x][1]) - Math.abs(unHisto[x][1]);
+				similitudeB += Math.abs(histoRecu[x][2]) - Math.abs(unHisto[x][2]);
+			}
 			
 			Double similitudeValue = similitudeR + similitudeG + similitudeB;
 			
 			//C				
-			String name = "0"+ cpt;
+			String name = "00"+ cpt;
 			listImgSimil.put(name,similitudeValue);
 			// --- //
+			
 			cpt++;
 		}
 		// --- //
 		
-		//Afficher les 10 plus proches
 		
+		//6) ---> Afficher les 10 plus proches //Pas ok
+		
+		TreeMap<String,Double> listImgSimilSort = new TreeMap<>(); //sortByValue(listImgSimil);
+		List<String> top10Names = new ArrayList<String>();
+		
+		//Google
+        Set set = listImgSimilSort.entrySet();
+        Iterator it = set.iterator();
+     
+        for(int i = 0; i<10; i++) {
+          Map.Entry mentry = (Map.Entry)it.next();
+          top10Names.add((String) mentry.getKey());
+        }
+        // fin Google //
+        
+        for(String uneImgStr : top10Names) { 
+        	
+        	Image uneImg = ImageLoader.exec(pathMotos+ uneImgStr);
+        	Viewer2D.exec(uneImg); 
+        }
+        // --- //
 	}
 	
 	
